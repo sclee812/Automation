@@ -292,58 +292,6 @@ class Account():
         CALL writeLog("Samsung account %s found: [%s]" % ("not" if not res else "", res))
         return res
 
-    def createEventOrTask(self, title, calendar, dateTimeDict=None, reminder="", location="", useLocationMap=False,
-                          startDate=True):
-        """
-        Create new event or task in Calendar
-        @title: String - Name of event/task
-        @calendar: String - Calendar name, eg. Samsung Calendar
-        @dateTimeDict: dict - similar dict as in getDeviceDateTime(), but with year, month, day, hour and minutes
-        @reminder: String - reminder option, eg. 10 minutes before event/task
-        @location: String - eg. City or street
-        @useLocationMap: Boolean - if True, get device location
-        Returns True if task/event created successfully, False otherwise
-        """
-        CALL writeLog("Creating new event or task - START")
-        CALL goToCalendar()
-        if not CALL clickAnObject(resourceId="(?i).*today.*"):  # A202F
-            CALL clickAnObject(text="(?i)Today")
-        CALL clickAnObject(talkback="(?i)(?:Create event|Add.*event).*")
-        # + sign icon, fixed for T OS (add detailed event)
-
-        CALL typeText(text=title)
-        CALL clickAnObject(resourceId=".*title")
-
-        self._selectCalendar(calendar=calendar)
-        if dateTimeDict:
-            CALL calendar._setDateAndTime(dateTimeDict, startDate=True)
-            if not startDate:
-                CALL calendar._setDateAndTime(dateTimeDict, startDate=False)
-                dateTimeDict["hour"] = dateTimeDict["endHour"]
-        if reminder:
-            CALL calendar._addReminder(reminder=reminder)
-        if location:
-            CALL calendar._setLocationInformation(location=location, useLocationMap=useLocationMap)
-        CALL writeLog("Creating new event or task - STOP")
-        res = CALL clickAnObject(resourceId=".*(?:action|menu)_done")
-        if CALL waitUntilObjectAppears(text="(?i)Turn on selected calendar.*"):
-            CALL clickAnObject(text="(?i)Turn on")
-        return bool(res)
-
-    def _selectCalendar(self, calendar):
-        """
-        Select calendar to save created instance as an event or a task
-        @calendar: String - Calendar name, eg. if My calendars then new instance saved as a event, if My task - as a task
-        Returns True if calendar successfully selected, False otherwise
-        """
-        CALL writeLog("Selecting calendar")
-        CALL clickAnObject(resourceId=".*calendars_selected_item")
-        if not CALL slideUpDownToFindObject(resourceId=".*(?:account_title|calendar_name).*",
-                                                   text="%s.*" % calendar):  # slide down
-            CALL slideUpDownToFindObject(resourceId=".*account_type", text="%s.*" % calendar)
-        # CALL clickAnObject(resourceId=".*(?:account_title|calendar_name).*", text="%s.*" % calendar)  # slide down
-        return bool(CALL waitUntilObjectAppears(resourceId=".*calendars_selected_item", text="%s.*" % calendar))
-
     def addNewEmailAccount(self, username, password):
         """
         Account email account of any domain type using state transition method
