@@ -8,4 +8,4 @@ I introduced the state transition mechanism to the team and demonstrated its ben
 One major advantage is the modularity it brings, as we only need to handle actions relvant to the current state. This approach clarifies the scope and responsibilities of each state, 
 making the code more focused and easier to understand.
 The logic and flow of the automation are improved by eliminating redundant and unnecesary checks, ensuring a streamlined and efficient process. 
-Additionally, the state transition mechanism simplifies error handling and recovery, making it easier to maintain update error handling procedures. 
+Additionally, the state transition mechanism simplifies error handling and recovery, making it easier to maintain and update error handling procedures. 
